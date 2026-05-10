@@ -155,7 +155,7 @@ train:
     max_norm: 5.0
 
   early_stopping:
-    enabled: true
+    enabled: false
     monitor: "segm_mAP"
     mode: "max"
     patience: 15
