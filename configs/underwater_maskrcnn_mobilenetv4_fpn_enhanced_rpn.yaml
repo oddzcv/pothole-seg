@@ -39,7 +39,7 @@ model:
     name: "mobilenetv4_conv_medium_fpn"
     source: "timm"
     pretrained: true
-    timm_model_name: "mobilenetv4_conv_medium.e500_r256_in1k"
+    timm_model_name: "mobilenetv4_conv_medium"
     out_channels: 256
     out_indices: [1, 2, 3, 4]
 
