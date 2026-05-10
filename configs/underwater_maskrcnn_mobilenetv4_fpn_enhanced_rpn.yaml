@@ -7,10 +7,10 @@ project:
 
 data:
   source: "roboflow"
-  workspace: "auto"          # atau isi workspace Roboflow asli
-  project: "ISI_PROJECT_ASLI"
-  version: 1
-  format: "coco-segmentation"
+  workspace: "informatika-rpibl"
+  project: "jalan-berlubang-fixed-oz5ts"
+  version: 3
+  format: "coco-segmentation""
 
   class_name: "object"
   metric_prefix: "custom"
