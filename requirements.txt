@@ -1,0 +1,12 @@
+torch
+torchvision
+timm
+albumentations
+opencv-python
+pycocotools
+roboflow
+tqdm
+pandas
+matplotlib
+pyyaml
+numpy
