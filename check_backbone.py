@@ -1,3 +1,5 @@
+import argparse
+
 import torch
 
 from potholeseg.config import load_config
@@ -7,16 +9,28 @@ from potholeseg.models.backbones import (
 )
 
 
-def main():
-    cfg = load_config("configs/maskrcnn_mobilenetv3_large_fpn.yaml")
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--config",
+        default="configs/maskrcnn_mobilenetv3_large_fpn.yaml",
+        help="Path to YAML config.",
+    )
+    return parser.parse_args()
 
+
+def main():
+    args = parse_args()
+
+    cfg = load_config(args.config)
+
+    print("Config:", args.config)
     print("Available backbones:", available_backbones())
     print("Backbone from config:", cfg["model"]["backbone"]["name"])
 
     backbone = build_backbone(cfg)
     backbone.eval()
 
-    # Ukuran kecil untuk test lokal agar tidak berat.
     x = torch.rand(1, 3, 416, 416)
 
     with torch.no_grad():

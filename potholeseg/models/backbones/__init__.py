@@ -51,3 +51,7 @@ def available_backbones():
 # Import registered backbones here.
 # Do not remove this import because it triggers registration.
 from .mobilenetv3 import build_mobilenetv3_large_fpn  # noqa: E402,F401
+from .mobilenetv4 import (  # noqa: E402,F401
+    build_mobilenetv4_conv_medium_fpn,
+    build_mobilenetv4_conv_large_fpn,
+)
