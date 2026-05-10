@@ -1,0 +1,139 @@
+project:
+  name: "underwater_maskrcnn_mobilenetv4_fpn_enhanced_rpn"
+  seed: 42
+  device: "auto"
+  work_dir: "runs/underwater_maskrcnn_mobilenetv4_fpn_enhanced_rpn"
+  test_eval_dir: "runs/underwater_maskrcnn_mobilenetv4_fpn_enhanced_rpn/test_eval"
+
+data:
+  source: "roboflow"
+  workspace: "auto"          # atau isi workspace Roboflow asli
+  project: "ISI_PROJECT_ASLI"
+  version: 1
+  format: "coco-segmentation"
+
+  class_name: "object"
+  metric_prefix: "custom"
+  num_classes: 2
+  background_label: 0
+  object_label: 1
+
+  train_split: "train"
+  val_split: "valid"
+  test_split: "test"
+
+  fix_categories: true
+  filter_empty_gt: true
+  min_size: 32
+
+preprocess:
+  enhancement:
+    enabled: false
+
+model:
+  architecture: "maskrcnn"
+  framework: "torchvision"
+
+  backbone:
+    name: "mobilenetv4_conv_medium_fpn"
+    source: "timm"
+    pretrained: true
+    timm_model_name: "mobilenetv4_conv_medium.e500_r256_in1k"
+    out_channels: 256
+    out_indices: [1, 2, 3, 4]
+
+  transform:
+    no_resize_internal: true
+    image_mean: [0.485, 0.456, 0.406]
+    image_std: [0.229, 0.224, 0.225]
+    size_divisible: 32
+
+  rpn:
+    anchor_generator:
+      enabled: true
+      sizes:
+        - [16]
+        - [32]
+        - [64]
+        - [128]
+        - [256]
+      aspect_ratios:
+        - [0.33, 0.5, 1.0, 2.0, 3.0]
+        - [0.33, 0.5, 1.0, 2.0, 3.0]
+        - [0.33, 0.5, 1.0, 2.0, 3.0]
+        - [0.33, 0.5, 1.0, 2.0, 3.0]
+        - [0.33, 0.5, 1.0, 2.0, 3.0]
+
+    pre_nms_top_n_train: 2000
+    pre_nms_top_n_test: 1000
+    post_nms_top_n_train: 2000
+    post_nms_top_n_test: 1000
+    nms_thresh: 0.7
+    fg_iou_thresh: 0.7
+    bg_iou_thresh: 0.3
+    batch_size_per_image: 256
+    positive_fraction: 0.5
+
+  roi_heads:
+    score_thresh: 0.05
+    detections_per_img: 100
+
+augmentation:
+  train:
+    random_flip:
+      enabled: true
+      p: 0.5
+
+    random_choice_resize:
+      enabled: true
+      scales:
+        - [512, 512]
+      keep_ratio: true
+
+  val:
+    resize:
+      scale: [512, 512]
+      keep_ratio: true
+
+  test:
+    resize:
+      scale: [512, 512]
+      keep_ratio: true
+
+train:
+  epochs: 50
+  batch_size: 4
+  val_batch_size: 1
+  test_batch_size: 1
+  num_workers: 2
+  pin_memory: true
+  amp: true
+
+  optimizer:
+    name: "SGD"
+    lr: 0.01
+    momentum: 0.9
+    weight_decay: 0.0001
+
+  scheduler:
+    name: "warmup_cosine"
+    warmup_iters: 500
+    warmup_start_factor: 0.001
+    t_max: 50
+    eta_min: 0.00001
+
+evaluation:
+  metrics:
+    - "coco_bbox"
+    - "coco_segm"
+    - "pothole_metric"
+
+  coco:
+    score_thr: 0.05
+    mask_thr: 0.5
+
+  pothole_metric:
+    prefix: "custom"
+    score_thr: 0.05
+    mask_thr: 0.5
+    merge_instances: true
