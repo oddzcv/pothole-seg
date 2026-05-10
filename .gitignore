@@ -16,14 +16,14 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Data and outputs
-data/
-datasets/
-runs/
-work_dirs/
-outputs/
-checkpoints/
-weights/
+# Data and outputs at project root only
+/data/
+/datasets/
+/runs/
+/work_dirs/
+/outputs/
+/checkpoints/
+/weights/
 *.pth
 *.pt
 *.onnx

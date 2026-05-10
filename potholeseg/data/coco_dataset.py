@@ -1,6 +1,7 @@
 import random
 from pathlib import Path
 from typing import Any, Dict
+from potholeseg.data.enhancement import enhance_image
 
 import cv2
 import numpy as np
@@ -149,6 +150,12 @@ class CocoInstanceSegDatasetMmdetLike(Dataset):
             raise RuntimeError(f"Failed to read image: {img_path}")
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        enh_cfg = self.cfg.get("preprocess", {}).get("enhancement", {})
+        apply_splits = enh_cfg.get("apply_splits", ["train", "valid", "test"])
+
+        if self.split in apply_splits:
+            image = enhance_image(image, enh_cfg)
 
         orig_h, orig_w = image.shape[:2]
 
