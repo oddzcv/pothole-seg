@@ -10,7 +10,7 @@ data:
   workspace: "informatika-rpibl"
   project: "jalan-berlubang-fixed-oz5ts"
   version: 3
-  format: "coco-segmentation""
+  format: "coco-segmentation"
 
   class_name: "object"
   metric_prefix: "custom"
