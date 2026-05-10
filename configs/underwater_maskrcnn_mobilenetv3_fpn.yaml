@@ -9,13 +9,13 @@ project:
 
 data:
   source: "roboflow"
-  workspace: "ISI_WORKSPACE_PROF"
-  project: "ISI_PROJECT_PROF"
-  version: 1
+  workspace: "informatika-rpibl"
+  project: "jalan-berlubang-fixed-oz5ts"
+  version: 3
   format: "coco-segmentation"
 
-  class_name: "object"
-  metric_prefix: "custom"
+  class_name: "Lubang"
+  metric_prefix: "pothole"
   coco_category_id: 0
   background_label: 0
   object_label: 1
