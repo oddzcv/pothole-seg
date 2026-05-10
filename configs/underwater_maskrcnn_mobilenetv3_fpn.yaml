@@ -1,11 +1,11 @@
-# configs/proposed_underwater_maskrcnn_mobilenetv3_fpn.yaml
+# configs/underwater_maskrcnn_mobilenetv3_fpn.yaml
 
 project:
-  name: "proposed_underwater_maskrcnn_mobilenetv3_fpn"
+  name: "underwater_maskrcnn_mobilenetv3_fpn"
   seed: 42
   device: "auto"
-  work_dir: "runs/proposed_underwater_maskrcnn_mobilenetv3_fpn"
-  test_eval_dir: "runs/proposed_underwater_maskrcnn_mobilenetv3_fpn/test_eval"
+  work_dir: "runs/underwater_maskrcnn_mobilenetv3_fpn"
+  test_eval_dir: "runs/underwater_maskrcnn_mobilenetv3_fpn/test_eval"
 
 data:
   source: "roboflow"
