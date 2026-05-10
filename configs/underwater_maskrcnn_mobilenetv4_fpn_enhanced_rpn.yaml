@@ -81,43 +81,51 @@ model:
 
 augmentation:
   train:
-    epochs: 50
-    batch_size: 4
-    val_batch_size: 1
-    test_batch_size: 1
-    num_workers: 2
-    pin_memory: true
-    amp: true
+    random_flip:
+      enabled: true
+      p: 0.5
 
-    optimizer:
-      name: "SGD"
-      lr: 0.01
-      momentum: 0.9
-      weight_decay: 0.0001
+    albumentations:
+      random_brightness_contrast:
+        enabled: true
+        brightness_limit: 0.2
+        contrast_limit: 0.2
+        p: 0.7
 
-    scheduler:
-      name: "warmup_cosine"
-      warmup_iters: 500
-      warmup_start_factor: 0.001
-      t_max: 50
-      eta_min: 0.00001
+      hue_saturation_value:
+        enabled: true
+        hue_shift_limit: 8
+        sat_shift_limit: 15
+        val_shift_limit: 10
+        p: 0.4
 
-    checkpoint:
-      save_best: true
-      monitor: "segm_mAP"
-      mode: "max"
-      best_model_name: "best_segm_mAP.pth"
-      last_model_name: "last_checkpoint.pth"
-      save_last: true
+      motion_blur:
+        enabled: true
+        blur_limit: 4
+        p: 0.2
+
+      sharpen:
+        enabled: true
+        alpha: [0.1, 0.25]
+        lightness: [0.9, 1.1]
+        p: 0.15
+
+    random_choice_resize:
+      enabled: true
+      scales:
+        - [1333, 800]
+        - [1600, 900]
+        - [1800, 1000]
+      keep_ratio: true
 
   val:
     resize:
-      scale: [512, 512]
+      scale: [1600, 900]
       keep_ratio: true
 
   test:
     resize:
-      scale: [512, 512]
+      scale: [1600, 900]
       keep_ratio: true
 
 train:
@@ -142,6 +150,25 @@ train:
     t_max: 50
     eta_min: 0.00001
 
+  gradient_clipping:
+    enabled: false
+    max_norm: 5.0
+
+  early_stopping:
+    enabled: true
+    monitor: "segm_mAP"
+    mode: "max"
+    patience: 15
+    min_delta: 0.001
+
+  checkpoint:
+    save_best: true
+    monitor: "segm_mAP"
+    mode: "max"
+    best_model_name: "best_segm_mAP.pth"
+    last_model_name: "last_checkpoint.pth"
+    save_last: true
+
 evaluation:
   metrics:
     - "coco_bbox"
@@ -153,7 +180,16 @@ evaluation:
     mask_thr: 0.5
 
   pothole_metric:
-    prefix: "custom"
+    prefix: "pothole"
     score_thr: 0.05
     mask_thr: 0.5
     merge_instances: true
+
+predict:
+  score_thr: 0.05
+  mask_thr: 0.5
+  mask_alpha: 0.45
+
+export:
+  onnx: true
+  input_size: [1600, 900]
